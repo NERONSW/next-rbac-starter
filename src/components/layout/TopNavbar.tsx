@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { NAVIGATION_ITEMS } from "@/config/navigation";
-import { getCurrentUser, mockLogout } from "@/lib/auth";
+import { mockLogout } from "@/lib/auth";
+import { useCurrentUser } from "@/lib/use-auth";
 
 /** A link is active on its exact path or any nested sub-path. */
 function isActive(pathname: string, href: string): boolean {
@@ -13,7 +14,7 @@ function isActive(pathname: string, href: string): boolean {
 export default function TopNavbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const user = getCurrentUser();
+  const user = useCurrentUser();
 
   const navItems = user
     ? NAVIGATION_ITEMS.filter((item) => item.roles.includes(user.role))
