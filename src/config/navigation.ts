@@ -10,17 +10,25 @@ export interface NavItem {
   title: string;
   href: string;
   /** Permission required to see the item and enter the route. */
-  permission: Permission;
+  requiredPermission: Permission;
 }
 
 export const NAVIGATION_ITEMS: NavItem[] = [
-  { title: "Dashboard", href: "/dashboard", permission: "dashboard:read" },
-  { title: "Profile", href: "/profile", permission: "profile:read" },
-  { title: "User Management", href: "/admin/users", permission: "users:read" },
+  {
+    title: "Dashboard",
+    href: "/dashboard",
+    requiredPermission: "dashboard:read",
+  },
+  { title: "Profile", href: "/profile", requiredPermission: "profile:read" },
+  {
+    title: "User Management",
+    href: "/admin/users",
+    requiredPermission: "users:read",
+  },
   {
     title: "System Settings",
     href: "/super-admin/settings",
-    permission: "settings:read",
+    requiredPermission: "settings:read",
   },
 ];
 
@@ -28,7 +36,7 @@ export interface RoutePermission {
   /** Regex tested against the request pathname. */
   pattern: RegExp;
   /** Permission required to access matching routes. */
-  permission: Permission;
+  requiredPermission: Permission;
 }
 
 /**
@@ -37,8 +45,8 @@ export interface RoutePermission {
  * keep broader prefixes after narrower ones if they ever overlap.
  */
 export const ROUTE_PERMISSIONS: RoutePermission[] = [
-  { pattern: /^\/dashboard/, permission: "dashboard:read" },
-  { pattern: /^\/profile/, permission: "profile:read" },
-  { pattern: /^\/admin/, permission: "users:read" },
-  { pattern: /^\/super-admin/, permission: "settings:read" },
+  { pattern: /^\/dashboard/, requiredPermission: "dashboard:read" },
+  { pattern: /^\/profile/, requiredPermission: "profile:read" },
+  { pattern: /^\/admin/, requiredPermission: "users:read" },
+  { pattern: /^\/super-admin/, requiredPermission: "settings:read" },
 ];

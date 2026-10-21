@@ -1,30 +1,35 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { mockLogin } from "@/lib/auth";
+import { mockLogin, MOCK_USERS } from "@/lib/auth";
 import type { Role } from "@/lib/auth";
 
-const DEMO_ROLES: ReadonlyArray<{
+const DEMO_ACCOUNTS: ReadonlyArray<{
   role: Role;
   label: string;
   description: string;
 }> = [
   {
     role: "user",
-    label: "Log in as User",
+    label: "Standard User",
     description: "General dashboard and profile access.",
   },
   {
     role: "admin",
-    label: "Log in as Admin",
+    label: "Admin",
     description: "Manage users and administrative views.",
   },
   {
     role: "super_admin",
-    label: "Log in as Super Admin",
+    label: "Super Admin",
     description: "Full system-settings control.",
   },
 ];
+
+/** Permissions granted to a persona, sourced from the shared mock users. */
+function permissionsFor(role: Role) {
+  return MOCK_USERS.find((user) => user.role === role)?.permissions ?? [];
+}
 
 export default function Page() {
   const router = useRouter();
@@ -50,21 +55,34 @@ export default function Page() {
       </div>
 
       <div className="grid w-full max-w-3xl gap-4 sm:grid-cols-3">
-        {DEMO_ROLES.map(({ role, label, description }) => (
-          <button
-            key={role}
-            type="button"
-            onClick={() => handleLogin(role)}
-            className="flex flex-col gap-2 rounded-xl border border-zinc-200 bg-background p-5 text-left transition-colors hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
-          >
-            <span className="text-sm font-semibold text-foreground">
-              {label}
-            </span>
-            <span className="text-sm text-zinc-600 dark:text-zinc-400">
-              {description}
-            </span>
-          </button>
-        ))}
+        {DEMO_ACCOUNTS.map(({ role, label, description }) => {
+          const permissions = permissionsFor(role);
+          return (
+            <button
+              key={role}
+              type="button"
+              onClick={() => handleLogin(role)}
+              className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-background p-5 text-left transition-colors hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:border-zinc-600 dark:hover:bg-zinc-900"
+            >
+              <span className="text-sm font-semibold text-foreground">
+                {label}
+              </span>
+              <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                {description}
+              </span>
+              <span className="mt-auto flex flex-wrap gap-1.5">
+                {permissions.map((permission) => (
+                  <span
+                    key={permission}
+                    className="rounded-full border border-zinc-200 px-2 py-0.5 font-mono text-[10px] text-zinc-600 dark:border-zinc-800 dark:text-zinc-400"
+                  >
+                    {permission}
+                  </span>
+                ))}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </main>
   );

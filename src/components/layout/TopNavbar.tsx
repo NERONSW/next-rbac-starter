@@ -18,7 +18,7 @@ export default function TopNavbar() {
 
   const navItems = user
     ? NAVIGATION_ITEMS.filter((item) =>
-        user.permissions.includes(item.permission),
+        user.permissions.includes(item.requiredPermission),
       )
     : [];
 

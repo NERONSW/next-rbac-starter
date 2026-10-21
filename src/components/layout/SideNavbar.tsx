@@ -16,7 +16,7 @@ export default function SideNavbar() {
 
   const navItems = userPermissions
     ? NAVIGATION_ITEMS.filter((item) =>
-        userPermissions.includes(item.permission),
+        userPermissions.includes(item.requiredPermission),
       )
     : [];
 

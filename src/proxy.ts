@@ -7,6 +7,7 @@
 
 import { NextResponse, type NextRequest } from "next/server";
 import { ROUTE_PERMISSIONS } from "@/config/navigation";
+import type { Permission } from "@/lib/auth";
 
 const UNAUTHORIZED_URL = "/unauthorized";
 
@@ -14,17 +15,17 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const cookieValue = request.cookies.get("user_permissions")?.value;
-  const userPermissions = cookieValue?.split(",") ?? [];
+  const userPermissions = (cookieValue?.split(",") ?? []) as Permission[];
 
-  const route = ROUTE_PERMISSIONS.find((permission) =>
-    permission.pattern.test(pathname),
+  const matchedRule = ROUTE_PERMISSIONS.find((rule) =>
+    rule.pattern.test(pathname),
   );
 
   // Authorized only when a permission rule covers the path and the cookie
   // holds the permission that rule requires. An invalid/foreign cookie value
   // fails the `includes` check the same way an absent one does.
   const authorized = Boolean(
-    route && userPermissions.includes(route.permission),
+    matchedRule && userPermissions.includes(matchedRule.requiredPermission),
   );
 
   if (!authorized) {
