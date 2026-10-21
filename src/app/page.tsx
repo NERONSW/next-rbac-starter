@@ -38,14 +38,14 @@ export default function Page() {
     <main className="flex flex-1 flex-col items-center justify-center gap-12 px-6 py-24">
       <div className="flex max-w-2xl flex-col items-center gap-4 text-center">
         <span className="rounded-full border border-zinc-200 px-3 py-1 text-xs font-medium text-zinc-600 dark:border-zinc-800 dark:text-zinc-400">
-          Role-Based Access Control
+          Permission-Based Access Control
         </span>
         <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
           RouteShield
         </h1>
         <p className="max-w-xl text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-          A starter that guards every route by role. Pick a demo account to see
-          how navigation and access change for each role.
+          A starter that guards every route by permission. Pick a demo account
+          to see how navigation and access change for each role.
         </p>
       </div>
 

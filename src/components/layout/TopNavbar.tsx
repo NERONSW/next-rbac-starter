@@ -17,7 +17,9 @@ export default function TopNavbar() {
   const user = useCurrentUser();
 
   const navItems = user
-    ? NAVIGATION_ITEMS.filter((item) => item.roles.includes(user.role))
+    ? NAVIGATION_ITEMS.filter((item) =>
+        user.permissions.includes(item.permission),
+      )
     : [];
 
   function handleLogout() {
