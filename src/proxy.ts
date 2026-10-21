@@ -1,29 +1,31 @@
-// Edge route protection: guard the authenticated/role-restricted areas.
+// Edge route protection: guard the authenticated/role-restricted areas by
+// permission.
 //
-// Runs before the App Router resolves a request, so it reads the `user_role`
-// cookie directly (the localStorage session lives in the browser and is not
-// available here).
+// Runs before the App Router resolves a request, so it reads the
+// `user_permissions` cookie directly (the localStorage session lives in the
+// browser and is not available here).
 
 import { NextResponse, type NextRequest } from "next/server";
 import { ROUTE_PERMISSIONS } from "@/config/navigation";
-import type { Role } from "@/lib/auth";
+import type { Permission } from "@/lib/auth";
 
 const UNAUTHORIZED_URL = "/unauthorized";
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const cookieRole = request.cookies.get("user_role")?.value;
+  const cookieValue = request.cookies.get("user_permissions")?.value;
+  const userPermissions = (cookieValue?.split(",") ?? []) as Permission[];
 
-  const route = ROUTE_PERMISSIONS.find((permission) =>
-    permission.pattern.test(pathname),
+  const matchedRule = ROUTE_PERMISSIONS.find((rule) =>
+    rule.pattern.test(pathname),
   );
 
   // Authorized only when a permission rule covers the path and the cookie
-  // holds a role that rule allows. An invalid/foreign cookie value fails the
-  // `includes` check the same way an absent one does.
+  // holds the permission that rule requires. An invalid/foreign cookie value
+  // fails the `includes` check the same way an absent one does.
   const authorized = Boolean(
-    route && cookieRole && route.roles.includes(cookieRole as Role),
+    matchedRule && userPermissions.includes(matchedRule.requiredPermission),
   );
 
   if (!authorized) {

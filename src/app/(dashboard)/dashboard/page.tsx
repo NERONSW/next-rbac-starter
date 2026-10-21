@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useCurrentUser } from "@/lib/use-auth";
 
 export default function Page() {
@@ -58,6 +57,22 @@ export default function Page() {
             </dd>
           </div>
         </dl>
+
+        <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+          <p className="text-xs font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+            Permissions
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {user.permissions.map((permission) => (
+              <span
+                key={permission}
+                className="rounded-full border border-zinc-200 px-2 py-0.5 font-mono text-xs text-zinc-600 dark:border-zinc-800 dark:text-zinc-400"
+              >
+                {permission}
+              </span>
+            ))}
+          </div>
+        </div>
 
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
           This page is available to every role. Try switching accounts to see

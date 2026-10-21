@@ -12,10 +12,12 @@ function isActive(pathname: string, href: string): boolean {
 
 export default function SideNavbar() {
   const pathname = usePathname();
-  const userRole = useCurrentUser()?.role;
+  const userPermissions = useCurrentUser()?.permissions;
 
-  const navItems = userRole
-    ? NAVIGATION_ITEMS.filter((item) => item.roles.includes(userRole))
+  const navItems = userPermissions
+    ? NAVIGATION_ITEMS.filter((item) =>
+        userPermissions.includes(item.requiredPermission),
+      )
     : [];
 
   if (navItems.length === 0) {
